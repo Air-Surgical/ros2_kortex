@@ -210,7 +210,7 @@ Alternatively, for a physical robot:
 
 ```bash
 ros2 launch kortex_bringup gen3.launch.py \
-  robot_ip:=192.168.1.10 \
+  robot_ip:=192.168.3.10 \
 ```
 You can specify the following arguments if you wish to change your arm configuration:
 
@@ -228,7 +228,7 @@ You can specify the following arguments if you wish to change your arm configura
 
 * `dof` : Degrees of freedom of the arm. Possible values are either `6` or `7`.Default value is `7`.
 
-* `robot_ip` : IP address by which the robot can be reached. No default is specified, this is a required argument. All arms are shipped with address `192.168.1.10`, but if you have reassigned your physical arm's robot IP address, then you will need to assign that ip address.
+* `robot_ip` : IP address by which the robot can be reached. No default is specified, this is a required argument. All arms are shipped with address `192.168.3.10`, but if you have reassigned your physical arm's robot IP address, then you will need to assign that ip address.
 
 * `use_fake_hardware` : Start robot with fake hardware mirroring command to its states. Default value is `false`.
 
@@ -271,7 +271,7 @@ Alternatively, if you wish to use the physical robot:
 
 ```bash
 ros2 launch kortex_bringup gen3_lite.launch.py \
-  robot_ip:=192.168.1.10 \
+  robot_ip:=192.168.3.10 \
 ```
 
 You can specify the following arguments if you wish to change your arm configuration:
@@ -288,7 +288,7 @@ You can specify the following arguments if you wish to change your arm configura
 
 * `gripper_max_force` : Max force for gripper commands. Default value is `100.0`.
 
-* `robot_ip` : IP address by which the robot can be reached. No default is specified, this is a required argument. All arms are shipped with address `192.168.1.10`, but if you have reassigned your physical arm's robot IP address, then you will need to assign that ip address. If you're using an USB to Ethernet interface to connect your robot to your machine instead of USB via RNDIS, the ip address will be `192.168.2.10`.
+* `robot_ip` : IP address by which the robot can be reached. No default is specified, this is a required argument. All arms are shipped with address `192.168.3.10`, but if you have reassigned your physical arm's robot IP address, then you will need to assign that ip address. If you're using an USB to Ethernet interface to connect your robot to your machine instead of USB via RNDIS, the ip address will be `192.168.2.10`.
 
 * `use_fake_hardware` : Start robot with fake hardware mirroring command to its states. Default value is `false`.
 
@@ -359,14 +359,14 @@ For Gen3:
 
 ```bash
 ros2 launch kinova_gen3_7dof_robotiq_2f_85_moveit_config robot.launch.py \
-  robot_ip:=192.168.1.10
+  robot_ip:=192.168.3.10
 ```
 
 For Gen3-Lite:
 
 ```bash
 ros2 launch kinova_gen3_lite_moveit_config robot.launch.py \
-  robot_ip:=192.168.1.10
+  robot_ip:=192.168.3.10
 ```
 
 

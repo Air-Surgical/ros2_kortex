@@ -667,20 +667,20 @@ CallbackReturn KortexMultiInterfaceHardware::on_activate(
   }
 
   // Initialize gripper
-  // float gripper_initial_position =
-  //   base_feedback.interconnect().gripper_feedback().motor()[0].position();
-  // RCLCPP_INFO(LOGGER, "Gripper initial position is '%f'.", gripper_initial_position);
+  float gripper_initial_position =
+    base_feedback.interconnect().gripper_feedback().motor()[0].position();
+  RCLCPP_INFO(LOGGER, "Gripper initial position is '%f'.", gripper_initial_position);
 
-  // // to radians
-  // gripper_command_position_ = gripper_initial_position / 100.0 * 0.81;
+  // to radians
+  gripper_command_position_ = gripper_initial_position / 100.0 * 0.81;
 
-  // // Initialize interconnect command to current gripper position.
-  // base_command_.mutable_interconnect()->mutable_command_id()->set_identifier(0);
-  // gripper_motor_command_ =
-  //   base_command_.mutable_interconnect()->mutable_gripper_command()->add_motor_cmd();
-  // gripper_motor_command_->set_position(gripper_initial_position);  // % position
-  // gripper_motor_command_->set_velocity(gripper_speed_command_);    // % speed
-  // gripper_motor_command_->set_force(gripper_force_command_);       // % force
+  // Initialize interconnect command to current gripper position.
+  base_command_.mutable_interconnect()->mutable_command_id()->set_identifier(0);
+  gripper_motor_command_ =
+    base_command_.mutable_interconnect()->mutable_gripper_command()->add_motor_cmd();
+  gripper_motor_command_->set_position(gripper_initial_position);  // % position
+  gripper_motor_command_->set_velocity(gripper_speed_command_);    // % speed
+  gripper_motor_command_->set_force(gripper_force_command_);       // % force
 
   // Send a first frame
   base_feedback = base_cyclic_.Refresh(base_command_);
@@ -689,10 +689,8 @@ CallbackReturn KortexMultiInterfaceHardware::on_activate(
   {
     if (std::isnan(arm_positions_[i]))
     {
-      // arm_positions_[i] = KortexMathUtil::wrapRadiansFromMinusPiToPi(
-      //   KortexMathUtil::toRad(base_feedback.actuators(i).position()));  // rad
-      arm_positions_[i] = KortexMathUtil::toRad(
-                          base_feedback.actuators(i).position());  // rad
+      arm_positions_[i] = KortexMathUtil::wrapRadiansFromMinusPiToPi(
+        KortexMathUtil::toRad(base_feedback.actuators(i).position()));  // rad
     }
     if (std::isnan(arm_velocities_[i]))
     {
@@ -704,10 +702,8 @@ CallbackReturn KortexMultiInterfaceHardware::on_activate(
     }
     if (std::isnan(arm_commands_positions_[i]))
     {
-      // arm_commands_positions_[i] = KortexMathUtil::wrapRadiansFromMinusPiToPi(
-      //   KortexMathUtil::toRad(base_feedback.actuators(i).position()));  // rad
-      arm_commands_positions_[i] = KortexMathUtil::toRad(
-                          base_feedback.actuators(i).position());  // rad
+      arm_commands_positions_[i] = KortexMathUtil::wrapRadiansFromMinusPiToPi(
+        KortexMathUtil::toRad(base_feedback.actuators(i).position()));  // rad
     }
     if (std::isnan(arm_commands_velocities_[i]))
     {
@@ -766,7 +762,7 @@ return_type KortexMultiInterfaceHardware::read(
   in_fault_ = (feedback_.base().active_state() == Kinova::Api::Common::ArmState::ARMSTATE_IN_FAULT);
 
   // read gripper state
-  // readGripperPosition();
+  readGripperPosition();
 
   for (std::size_t i = 0; i < actuator_count_; i++)
   {
@@ -776,11 +772,9 @@ return_type KortexMultiInterfaceHardware::read(
     arm_velocities_[i] = KortexMathUtil::toRad(feedback_.actuators(i).velocity());  // rad/sec
     // read position
     num_turns_tmp_ = 0;
-    // arm_positions_[i] = KortexMathUtil::wrapRadiansFromMinusPiToPi(
-    //   KortexMathUtil::toRad(feedback_.actuators(i).position()),
-    //   num_turns_tmp_);  // rad
-
-    arm_positions_[i] = KortexMathUtil::toRad(feedback_.actuators(i).position());  // rad
+    arm_positions_[i] = KortexMathUtil::wrapRadiansFromMinusPiToPi(
+      KortexMathUtil::toRad(feedback_.actuators(i).position()),
+      num_turns_tmp_);  // rad
 
     in_fault_ += (feedback_.actuators(i).fault_bank_a() + feedback_.actuators(i).fault_bank_b());
 
@@ -876,8 +870,8 @@ return_type KortexMultiInterfaceHardware::write(
       }
 
       // gripper control
-      // sendGripperCommand(
-      //   arm_mode_, gripper_command_position_, gripper_speed_command_, gripper_force_command_);
+      sendGripperCommand(
+        arm_mode_, gripper_command_position_, gripper_speed_command_, gripper_force_command_);
       // read after write in twist mode
       feedback_ = base_cyclic_.RefreshFeedback();
     }
@@ -888,8 +882,8 @@ return_type KortexMultiInterfaceHardware::write(
       // Per joint controller active
 
       // gripper control
-      // sendGripperCommand(
-      //   arm_mode_, gripper_command_position_, gripper_speed_command_, gripper_force_command_);
+      sendGripperCommand(
+        arm_mode_, gripper_command_position_, gripper_speed_command_, gripper_force_command_);
 
       if (joint_based_controller_running_)
       {
@@ -928,10 +922,8 @@ void KortexMultiInterfaceHardware::prepareCommands()
   for (size_t i = 0; i < actuator_count_; i++)
   {
     // set command per joint
-    // cmd_degrees_tmp_ = static_cast<float>(
-    //   KortexMathUtil::wrapDegreesFromZeroTo360(KortexMathUtil::toDeg(arm_commands_positions_[i])));
-    cmd_degrees_tmp_ = static_cast<float>(KortexMathUtil::toDeg(arm_commands_positions_[i]));
-
+    cmd_degrees_tmp_ = static_cast<float>(
+      KortexMathUtil::wrapDegreesFromZeroTo360(KortexMathUtil::toDeg(arm_commands_positions_[i])));
     cmd_vel_tmp_ = static_cast<float>(KortexMathUtil::toDeg(arm_commands_velocities_[i]));
 
     base_command_.mutable_actuators(static_cast<int>(i))->set_position(cmd_degrees_tmp_);

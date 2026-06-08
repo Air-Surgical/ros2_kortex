@@ -35,7 +35,7 @@ def parseConnectionArguments(parser=argparse.ArgumentParser()):
         The parsed arguments.
 
     """
-    parser.add_argument("--ip", type=str, help="IP address of destination", default="192.168.1.10")
+    parser.add_argument("--ip", type=str, help="IP address of destination", default="192.168.3.10")
     parser.add_argument("-u", "--username", type=str, help="username to login", default="admin")
     parser.add_argument("-p", "--password", type=str, help="password to login", default="admin")
     return parser.parse_args()

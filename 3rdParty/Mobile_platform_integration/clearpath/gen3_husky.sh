@@ -69,7 +69,7 @@ sleep 20
 # Prompt user to check simulation status before proceeding
 read -p "Check the simulation scene and the related terminal for any error or anomaly and check the roobt state using the Webapp then press Enter to continue if all is working well, otherwise relaunch the system again or eventually restart the computer"
 
-gnome-terminal -- bash -c "ros2 launch kortex_bringup gen3.launch.py robot_ip:=192.168.1.10 gripper:=robotiq_2f_85 launch_rviz:=false; exec bash"
+gnome-terminal -- bash -c "ros2 launch kortex_bringup gen3.launch.py robot_ip:=192.168.3.10 gripper:=robotiq_2f_85 launch_rviz:=false; exec bash"
 sleep 5
 gnome-terminal -- bash -c "ros2 run clearpath_manipulators gazebo_to_real_robot_node; exec bash"
 sleep 5
